@@ -64,14 +64,10 @@ def axial_to_oddr(hex: AxialCoord) -> OffsetCoord:
     have "pointy top" hexagons, and you want odd rows 
     shoved 1/2 column to the right.
 
-    Parameters
-    ----------
-    hex : AxialCoord
-        The AxialCoord to convert.
+    Parameters:
+        hex: The AxialCoord to convert.
 
-    Returns
-    -------
-    OffsetCoord
+    Returns:
         The converted OffsetCoord.
     """
     parity = int(hex.r) & 1
@@ -86,14 +82,10 @@ def oddr_to_axial(hex: OffsetCoord) -> AxialCoord:
     have "flat top" hexagons, and you want odd rows 
     shoved 1/2 column to the right.
 
-    Parameters
-    ----------
-    hex : OffsetCoord
-        The OffsetCoord to convert.
+    Parameters:
+        hex: The OffsetCoord to convert.
 
-    Returns
-    -------
-    AxialCoord
+    Returns:
         The converted AxialCoord.
     """
     parity = int(hex.row) & 1
@@ -108,14 +100,10 @@ def axial_to_evenr(hex: AxialCoord) -> OffsetCoord:
     have "pointy top" hexagons, and you want even rows 
     shoved 1/2 column to the right.
 
-    Parameters
-    ----------
-    hex : OffsetCoord
-        The OffsetCoord to convert.
+    Parameters:
+        hex: The OffsetCoord to convert.
 
-    Returns
-    -------
-    AxialCoord
+    Returns:
         The converted AxialCoord.
     """
     parity = int(hex.r) & 1
@@ -130,14 +118,10 @@ def evenr_to_axial(hex: OffsetCoord) -> AxialCoord:
     have "pointy top" hexagons, and you want even rows 
     shoved 1/2 column to the right.
 
-    Parameters
-    ----------
-    hex : OffsetCoord
-        The OffsetCoord to convert.
+    Parameters:
+        hex: The OffsetCoord to convert.
 
-    Returns
-    -------
-    AxialCoord
+    Returns:
         The converted AxialCoord.
     """
     parity = int(hex.row) & 1
@@ -152,14 +136,10 @@ def axial_to_oddq(hex: AxialCoord) -> OffsetCoord:
     have "flat top" hexagons, and you want odd rows 
     shoved 1/2 column to the right.
 
-    Parameters
-    ----------
-    hex : OffsetCoord
-        The OffsetCoord to convert.
+    Parameters:
+        hex: The OffsetCoord to convert.
 
-    Returns
-    -------
-    AxialCoord
+    Returns:
         The converted AxialCoord.
     """
     parity = int(hex.q) & 1
@@ -174,14 +154,10 @@ def oddq_to_axial(hex: OffsetCoord) -> AxialCoord:
     have "flat top" hexagons, and you want odd rows 
     shoved 1/2 column to the right.
 
-    Parameters
-    ----------
-    hex : OffsetCoord
-        The OffsetCoord to convert.
+    Parameters:
+        hex: The OffsetCoord to convert.
 
-    Returns
-    -------
-    AxialCoord
+    Returns:
         The converted AxialCoord.
     """
     parity = int(hex.col) & 1
@@ -196,14 +172,10 @@ def axial_to_evenq(hex: AxialCoord) -> OffsetCoord:
     have "flat top" hexagons, and you want even rows 
     shoved 1/2 column to the right.
 
-    Parameters
-    ----------
-    hex : OffsetCoord
-        The OffsetCoord to convert.
+    Parameters:
+        hex: The OffsetCoord to convert.
 
-    Returns
-    -------
-    AxialCoord
+    Returns:
         The converted AxialCoord.
     """
     parity = int(hex.q) & 1
@@ -218,14 +190,10 @@ def evenq_to_axial(hex: OffsetCoord) -> AxialCoord:
     have "pointy top" hexagons, and you want even rows 
     shoved 1/2 column to the right.
 
-    Parameters
-    ----------
-    hex : OffsetCoord
-        The OffsetCoord to convert.
+    Parameters:
+        hex: The OffsetCoord to convert.
 
-    Returns
-    -------
-    AxialCoord
+    Returns:
         The converted AxialCoord.
     """
     parity = int(hex.col) & 1
@@ -241,14 +209,10 @@ def neighbors(coord: AxialCoord) -> list[AxialCoord]:
     The neighbors are computed by adding each of the six
     NEIGHBORS to the given AxialCoord.
 
-    Parameters
-    ----------
-    coord : AxialCoord
-        The hexagon for which to compute the neighbors.
+    Parameters:
+        coord: The hexagon for which to compute the neighbors.
 
-    Returns
-    -------
-    list[AxialCoord]
+    Returns:
         The list of neighbors of the given hexagon.
     """
     return [coord + other for other in NEIGHBORS]
@@ -258,16 +222,11 @@ def distance(a: AxialCoord, b: AxialCoord) -> int | float:
     """
     Computes the Manhattan distance between two hexagons.
 
-    Parameters
-    ----------
-    a : AxialCoord
-        The first hexagon.
-    b : AxialCoord
-        The second hexagon.
+    Parameters:
+        a: The first hexagon.
+        b: The second hexagon.
 
-    Returns
-    -------
-    int | float
+    Returns:
         The distance between the two hexagons.
     """
     v = a - b
@@ -278,16 +237,11 @@ def euclidean_distance(a: AxialCoord, b: AxialCoord) -> float:
     """
     Computes the Euclidean distance between two hexagons.
 
-    Parameters
-    ----------
-    a : AxialCoord
-        The first hexagon.
-    b : AxialCoord
-        The second hexagon.
+    Parameters:
+        a: The first hexagon.
+        b: The second hexagon.
 
-    Returns
-    -------
-    float
+    Returns:
         The Euclidean distance between the two hexagons.
     """
     v = a - b
@@ -329,16 +283,11 @@ def axial_line_draw(a, b):
     """
     Draws a line of hexagons between two points.
 
-    Parameters
-    ----------
-    a : AxialCoord
-        The starting point of the line.
-    b : AxialCoord
-        The ending point of the line.
+    Parameters:
+        a: The starting point of the line.
+        b: The ending point of the line.
 
-    Returns
-    -------
-    list[AxialCoord]
+    Returns:
         A list of hexagons that form the line.
     """
     N = int(distance(a, b))
