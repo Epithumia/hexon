@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hexon"
+authors = [
+    { name = "Rafael Lopez", email = "rafael.lopez@universite-paris-saclay.fr" },
+]
+description = "Python package to create and work with hexagonal maps."
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["railroad", "diagram"]
+license = { text = "MIT" }
+classifiers = ["Programming Language :: Python :: 3"]
+dependencies = ["numpy", "perlin_noise", "Pillow"]
+
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = { attr = "hexon.VERSION" }
+
+[project.optional-dependencies]
+tests = ["pytest", "coverage"]
+cli = ["typer"]
+documentation = [
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocs-plugin-inline-svg",
+    "mkdocstrings[python]",
+    "markdown-exec",
+]
+
+[project.scripts]
+hexon = "hexon.cli:cli"
