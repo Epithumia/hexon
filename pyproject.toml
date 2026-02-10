@@ -21,7 +21,7 @@ dynamic = ["version"]
 version = { attr = "hexon.VERSION" }
 
 [project.optional-dependencies]
-tests = ["pytest", "coverage"]
+tests = ["pytest", "pytest-cov", "coverage"]
 cli = ["typer"]
 documentation = [
     "mkdocs",

@@ -1,0 +1,8 @@
+[run]
+
+relative_files = True
+source = src/hexon
+omit = src/hexon/cli.py
+
+[report]
+precision = 2
