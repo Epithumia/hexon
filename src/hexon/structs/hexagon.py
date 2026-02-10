@@ -110,7 +110,7 @@ class Hexagon:
             fill=fill,
             outline=outline,
         )
-        self.properties["label"] = "test"
+
         if "label" in self.properties:
             from PIL import ImageFont
             from importlib import resources
