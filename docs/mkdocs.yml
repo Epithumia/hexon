@@ -102,3 +102,6 @@ nav:
 
 extra_css:
   - extra/custom.css
+
+watch:
+  - ../src

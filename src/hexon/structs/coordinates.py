@@ -1,8 +1,16 @@
 from dataclasses import dataclass
+from typing import Callable
 
 
 @dataclass
 class Point:
+    """
+    Pixel coordinates.
+
+    Attributes:
+        x: The x coordinate.
+        y: The y coordinate.
+    """
     x: int | float
     y: int | float
 
@@ -20,6 +28,14 @@ class Point:
 
 @dataclass
 class AxialCoord:
+    """
+    Axial (and cube) coordinates.
+
+    Attributes:
+        q: The q coordinate of the hexagon.
+        r: The r coordinate of the hexagon
+        s: The s coordinate of the hexagon.
+    """
     q: int | float
     r: int | float
 
@@ -54,6 +70,13 @@ NEIGHBORS = [
 
 @dataclass
 class OffsetCoord:
+    """
+    Offset coordinates.
+
+    Attributes:
+        col: The column of the hexagon.
+        row: the row of the hexagon.
+    """
     col: int | float
     row: int | float
 
@@ -61,7 +84,7 @@ class OffsetCoord:
 def axial_to_oddr(hex: AxialCoord) -> OffsetCoord:
     """
     Convert an AxialCoord to an OffsetCoord. Used when you
-    have "pointy top" hexagons, and you want odd rows 
+    have "pointy top" hexagons, and you want odd rows
     shoved 1/2 column to the right.
 
     Parameters:
@@ -79,7 +102,7 @@ def axial_to_oddr(hex: AxialCoord) -> OffsetCoord:
 def oddr_to_axial(hex: OffsetCoord) -> AxialCoord:
     """
     Convert an OffsetCoord to an AxialCoord. Used when you
-    have "flat top" hexagons, and you want odd rows 
+    have "flat top" hexagons, and you want odd rows
     shoved 1/2 column to the right.
 
     Parameters:
@@ -97,7 +120,7 @@ def oddr_to_axial(hex: OffsetCoord) -> AxialCoord:
 def axial_to_evenr(hex: AxialCoord) -> OffsetCoord:
     """
     Convert an AxialCoord to an OffsetCoord. Used when you
-    have "pointy top" hexagons, and you want even rows 
+    have "pointy top" hexagons, and you want even rows
     shoved 1/2 column to the right.
 
     Parameters:
@@ -115,7 +138,7 @@ def axial_to_evenr(hex: AxialCoord) -> OffsetCoord:
 def evenr_to_axial(hex: OffsetCoord) -> AxialCoord:
     """
     Convert an OffsetCoord to an AxialCoord. Used when you
-    have "pointy top" hexagons, and you want even rows 
+    have "pointy top" hexagons, and you want even rows
     shoved 1/2 column to the right.
 
     Parameters:
@@ -133,7 +156,7 @@ def evenr_to_axial(hex: OffsetCoord) -> AxialCoord:
 def axial_to_oddq(hex: AxialCoord) -> OffsetCoord:
     """
     Convert an AxialCoord to an OffsetCoord. Used when you
-    have "flat top" hexagons, and you want odd rows 
+    have "flat top" hexagons, and you want odd rows
     shoved 1/2 column to the right.
 
     Parameters:
@@ -151,7 +174,7 @@ def axial_to_oddq(hex: AxialCoord) -> OffsetCoord:
 def oddq_to_axial(hex: OffsetCoord) -> AxialCoord:
     """
     Convert an OffsetCoord to an AxialCoord. Used when you
-    have "flat top" hexagons, and you want odd rows 
+    have "flat top" hexagons, and you want odd rows
     shoved 1/2 column to the right.
 
     Parameters:
@@ -169,7 +192,7 @@ def oddq_to_axial(hex: OffsetCoord) -> AxialCoord:
 def axial_to_evenq(hex: AxialCoord) -> OffsetCoord:
     """
     Convert an AxialCoord to an OffsetCoord. Used when you
-    have "flat top" hexagons, and you want even rows 
+    have "flat top" hexagons, and you want even rows
     shoved 1/2 column to the right.
 
     Parameters:
@@ -187,7 +210,7 @@ def axial_to_evenq(hex: AxialCoord) -> OffsetCoord:
 def evenq_to_axial(hex: OffsetCoord) -> AxialCoord:
     """
     Convert an OffsetCoord to an AxialCoord. Used when you
-    have "pointy top" hexagons, and you want even rows 
+    have "pointy top" hexagons, and you want even rows
     shoved 1/2 column to the right.
 
     Parameters:
@@ -248,11 +271,40 @@ def euclidean_distance(a: AxialCoord, b: AxialCoord) -> float:
     return (v.q**2 + v.r**2 + (v.q * v.r)) ** 0.5
 
 
-def offset_distance(a: OffsetCoord, b: OffsetCoord, conversion) -> int | float:
+def offset_distance(
+    a: OffsetCoord, b: OffsetCoord, conversion: Callable[[OffsetCoord], AxialCoord]
+) -> int | float:
+    """
+    Computes the Manhattan distance between two hexagons given their offset coordinates.
+
+    Parameters:
+        a: The first hexagon.
+        b: The second hexagon.
+        conversion: A function to convert an OffsetCoord to an AxialCoord.
+
+    Returns:
+        The distance between the two hexagons.
+    """
     return distance(conversion(a), conversion(b))
 
 
 def axial_round(frac_q: float, frac_r: float, frac_s: float = None) -> AxialCoord:
+    """
+    Rounds the given fractional hex coordinates to the nearest axial coordinates.
+
+    The fractional coordinates are rounded to the nearest axial coordinates.
+    If the difference between the rounded coordinates and the fractional coordinates
+    is greater than the difference between the other two coordinates, the rounded
+    coordinates are adjusted to minimize the difference.
+
+    Parameters:
+        frac_q: The fractional q coordinate.
+        frac_r: The fractional r coordinate.
+        frac_s: The fractional s coordinate, defaults to None.
+
+    Returns:
+        The nearest axial coordinates to the given fractional coordinates.
+    """
     if frac_s is None:
         frac_s = -frac_q - frac_r
     q = round(frac_q)
@@ -272,14 +324,36 @@ def axial_round(frac_q: float, frac_r: float, frac_s: float = None) -> AxialCoor
 
 
 def lerp(a: int | float, b: int | float, t: float) -> float:
+    """
+    Linearly interpolates between two values.
+
+    Parameters:
+        a: The starting value.
+        b: The ending value.
+        t: The interpolation factor, where 0 <= t <= 1.
+
+    Returns:
+        The interpolated value.
+    """
     return a + (b - a) * t
 
 
 def axial_lerp(a: AxialCoord, b: AxialCoord, t: float) -> AxialCoord:
+    """
+    Linearly interpolates between two AxialCoords.
+
+    Parameters:
+        a: The starting AxialCoord.
+        b: The ending AxialCoord.
+        t: The interpolation factor, where 0 <= t <= 1.
+
+    Returns:
+        The interpolated AxialCoord.
+    """
     return axial_round(lerp(a.q, b.q, t), lerp(a.r, b.r, t), lerp(a.s, b.s, t))
 
 
-def axial_line_draw(a, b):
+def axial_line_draw(a: AxialCoord, b: AxialCoord) -> list[AxialCoord]:
     """
     Draws a line of hexagons between two points.
 
@@ -288,7 +362,7 @@ def axial_line_draw(a, b):
         b: The ending point of the line.
 
     Returns:
-        A list of hexagons that form the line.
+        A list of hexagons (AxialCoords) that form the line.
     """
     N = int(distance(a, b))
     results = []
@@ -301,10 +375,30 @@ def axial_line_draw(a, b):
 
 
 def axial_scale(a: AxialCoord, factor: int) -> AxialCoord:
+    """
+    Scales an AxialCoord by a given factor.
+
+    Parameters:
+        a: The AxialCoord to scale.
+        factor: The factor to scale by.
+
+    Returns:
+        The scaled AxialCoord.
+    """
     return AxialCoord(a.q * factor, a.r * factor)
 
 
 def axial_ring(center: AxialCoord, radius: int) -> list[AxialCoord]:
+    """
+    Computes a list of hexagons that form a ring around a given center at a given radius.
+
+    Parameters:
+        center: The center of the ring.
+        radius: The radius of the ring.
+
+    Returns:
+        A list of hexagons that form the ring.
+    """
     if radius <= 0:
         return [center]
     results = []
@@ -319,6 +413,16 @@ def axial_ring(center: AxialCoord, radius: int) -> list[AxialCoord]:
 
 
 def flat_axial_to_pixel(hex: AxialCoord, size: int) -> Point:
+    """
+    Computes the position of a flat-top hexagon in pixels from its axial coordinates.
+
+    Parameters:
+        hex: The axial coordinates of the hexagon.
+        size: The size of the hexagon.
+
+    Returns:
+        The position of the hexagon in pixels.
+    """
     from math import sqrt
 
     x = (3.0 / 2 * hex.q) * size
@@ -328,6 +432,16 @@ def flat_axial_to_pixel(hex: AxialCoord, size: int) -> Point:
 
 
 def pointy_axial_to_pixel(hex: AxialCoord, size: int) -> Point:
+    """
+    Computes the position of a pointy-top hexagon in pixels from its axial coordinates.
+
+    Parameters:
+        hex: The axial coordinates of the hexagon.
+        size: The size of the hexagon.
+
+    Returns:
+        The position of the hexagon in pixels.
+    """
     from math import sqrt
 
     x = (sqrt(3) * hex.q + sqrt(3) / 2 * hex.r) * size
@@ -336,7 +450,18 @@ def pointy_axial_to_pixel(hex: AxialCoord, size: int) -> Point:
     return Point(x, y)
 
 
-def pixel_to_pointy_hex(point: Point, size):
+def pixel_to_pointy_hex(point: Point, size: int) -> AxialCoord:
+    """
+    Computes the axial coordinates of a pointy-top hexagon from its pixel coordinates.
+
+    Parameters:
+        point: The pixel coordinates of the hexagon.
+        size: The size of the hexagon.
+
+    Returns:
+        The axial coordinates of the hexagon.
+    """
+
     from math import sqrt
 
     c_x = point.x / size
@@ -347,7 +472,17 @@ def pixel_to_pointy_hex(point: Point, size):
     return axial_round(q, r, -q - r)
 
 
-def pixel_to_flat_hex(point: Point, size):
+def pixel_to_flat_hex(point: Point, size: int) -> AxialCoord:
+    """
+    Computes the axial coordinates of a flat-top hexagon from its pixel coordinates.
+
+    Parameters:
+        point: The pixel coordinates of the hexagon.
+        size: The size of the hexagon.
+
+    Returns:
+        The axial coordinates of the hexagon.
+    """
     from math import sqrt
 
     c_x = point.x / size

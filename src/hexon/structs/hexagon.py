@@ -4,6 +4,10 @@ from . import orientation_types
 
 
 class Hexagon:
+    """
+    An hexagonal cell inside an HexMap
+    """
+
     def __init__(
         self,
         coords: AxialCoord,
@@ -11,6 +15,15 @@ class Hexagon:
         orientation: orientation_types = orientation_types.pointy,
         offset: Point = Point(0, 0),
     ):
+        """
+        Initializes a Hexagon with the given coordinates, size, orientation, and offset.
+
+        Parameters:
+            coords: The axial coordinates of the hexagon.
+            size: The size of the hexagon.
+            orientation: The orientation of the hexagon, either pointy or flat.
+            offset: The offset of the hexagon in the grid.
+        """
         self.coords = coords
         self.orientation = orientation
         self.size = size
@@ -33,6 +46,17 @@ class Hexagon:
         return f"Hexagon(coords={self.coords}, orientation={self.orientation}, properties={self.properties}, offset={self.offset}, edges={self.edges})"
 
     def hex_corner(self, size: int, direction: int) -> Point:
+        """
+        Computes the position of the nth hexagon corner in pixels.
+
+        Parameters:
+            size: The size of the hexagon.
+            direction: The direction of the corner, with 0 being the top-right
+                corner and increasing clockwise.
+
+        Returns:
+            The position of the corner in pixels, relative to the hexagon's position in the grid.
+        """
         from math import pi, cos, sin
         from .coordinates import flat_axial_to_pixel, pointy_axial_to_pixel
 
@@ -53,7 +77,20 @@ class Hexagon:
                 round(coords.y + size * sin(angle_rad) - self.offset.y),
             )
 
-    def draw(self, draw_interface):
+    def draw(self, draw_interface: "PIL.Image"):  # type: ignore
+        """
+        Draws the hexagon on the given image.
+
+        Parameters:
+            draw_interface: The image to draw on.
+
+        Notes:
+            - If the hexagon has a "border" property, it will be used as the outline color.
+            - If the hexagon has a "fill" property, it will be used as the fill color.
+            - If the hexagon has a "label" property, it will be drawn on the hexagon, and
+                - If the hexagon has a "font" property, it will be used as the font for the label.
+                - If the hexagon has a "label_color" property, it will be used as the color for the label.
+        """
         if "border" not in self.properties:
             outline = (255, 255, 255)
         else:

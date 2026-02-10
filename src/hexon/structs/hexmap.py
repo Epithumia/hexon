@@ -4,7 +4,19 @@ from .coordinates import AxialCoord, Point, axial_ring
 from . import orientation_types
 
 
-def find_offset(hex: Hexagon, size):
+def find_offset(hex: Hexagon, size: int) -> Point:
+    """
+    Finds the offset for a given hexagon, which is the point
+    that should be subtracted from all points in the hexagon
+    to get the actual position of the hexagon on the screen.
+
+    Parameters:
+        hex: The hexagon to find the offset for.
+        size: The size of the hexagon.
+
+    Returns:
+        The offset for the given hexagon.
+    """
     if hex.orientation == orientation_types.pointy:
         offset = Point(
             hex.hex_corner(size, 4).x,
@@ -19,7 +31,21 @@ def find_offset(hex: Hexagon, size):
 
 
 class HexMap:
-    def __init__(self, hex_size, orientation, seed) -> None:
+    """
+    Base Map class.
+    """
+
+    def __init__(
+        self, hex_size: int, orientation: orientation_types, seed: int
+    ) -> None:
+        """
+        Initializes a HexMap object.
+
+        Parameters:
+            hex_size: The size of each hexagon.
+            orientation: The orientation of the hexagons.
+            seed: The seed for the random number generator.
+        """
         self.hexagons = {}
         self.hex_size = hex_size
         self.orientation = orientation
@@ -27,6 +53,10 @@ class HexMap:
 
 
 class RectHexMap(HexMap):
+    """
+    Rectangular HexMap.
+    """
+
     def __init__(
         self,
         width: int,
@@ -35,6 +65,17 @@ class RectHexMap(HexMap):
         orientation: orientation_types = orientation_types.pointy,
         seed: int = 0,
     ):
+        """
+        Creates a hex map with the given width and height, with hexagons of the given size and orientation.
+        The hex map is seeded with the given seed.
+
+        Parameters:
+            width: The width of the hex map.
+            height: The height of the hex map.
+            hex_size: The size of each hexagon.
+            orientation: The orientation of the hexagons.
+            seed: The seed for the random number generator.
+        """
         super().__init__(hex_size, orientation, seed)
         self.width = width
         self.height = height
@@ -75,6 +116,12 @@ class RectHexMap(HexMap):
         return f"RectHexMap(width={self.width}, height={self.height}, hex_size={self.hex_size}, orientation={self.orientation}, hexagons={ordered_hexagons})"
 
     def draw(self, path: Path):
+        """
+        Draws the hex map as a PNG image and saves it to the given path.
+
+        Parameters:
+            path: The path where the image should be saved.
+        """
         from PIL import Image, ImageDraw
         from math import sqrt, ceil
 
@@ -118,6 +165,10 @@ class RectHexMap(HexMap):
 
 
 class CircularHexMap(HexMap):
+    """
+    Circular (hexagonal) HexMap
+    """
+
     def __init__(
         self,
         radius: int,
@@ -125,6 +176,16 @@ class CircularHexMap(HexMap):
         orientation: orientation_types = orientation_types.pointy,
         seed: int = 0,
     ):
+        """
+        Creates a circular hex map with the given radius, with hexagons of the given size and orientation.
+        The hex map is seeded with the given seed.
+
+        Parameters:
+            radius: The radius of the circular hex map.
+            hex_size: The size of each hexagon.
+            orientation: The orientation of the hexagons.
+            seed: The seed for the random number generator.
+        """
         super().__init__(hex_size, orientation, seed)
         self.radius = radius
         self.center = Hexagon(AxialCoord(0, 0), hex_size, orientation)
@@ -151,6 +212,12 @@ class CircularHexMap(HexMap):
         return f"CircularHexMap(radius={self.radius}, hex_size={self.hex_size}, orientation={self.orientation}, hexagons={ordered_hexagons})"
 
     def draw(self, path: Path):
+        """
+        Draws the hex map as a PNG image and saves it to the given path.
+
+        Parameters:
+            path: The path where the image should be saved.
+        """
         from PIL import Image, ImageDraw
         from math import sqrt, ceil
 
