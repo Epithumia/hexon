@@ -8,6 +8,6 @@ First release.
 
 Fixed a bug with the internal representation of the map.
 
-## v0.0.3
+## v0.0.4
 
 Embedded the default font file.
