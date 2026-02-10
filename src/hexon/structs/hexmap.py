@@ -109,10 +109,15 @@ class RectHexMap(HexMap):
 
     def __repr__(self) -> str:
         ordered_hexagons = []
-        for h in range(self.height):
-            q = -(h // 2)
-            for w in range(self.width):
-                ordered_hexagons.append(self.hexagons[AxialCoord(q + w, h)])
+        if self.orientation == orientation_types.pointy:
+            for h in range(self.height):
+                q = -(h // 2)
+                for w in range(self.width):
+                    ordered_hexagons.append(self.hexagons[AxialCoord(q + w, h)])
+        else:
+            for h in range(self.height):
+                for w in range(self.width):
+                    ordered_hexagons.append(self.hexagons[AxialCoord(w, h - (w // 2))])
         return f"RectHexMap(width={self.width}, height={self.height}, hex_size={self.hex_size}, orientation={self.orientation}, hexagons={ordered_hexagons})"
 
     def draw(self, path: Path):
