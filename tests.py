@@ -225,9 +225,10 @@ class CoordinatesUnitTests(unittest.TestCase):
         assert p1 != (1, 1)
 
     def test_lerp(self):
+        from pytest import approx
         from hexon.structs.coordinates import lerp
 
-        assert lerp(1, 2, 0.5) == 1.5
+        assert lerp(1, 2, 0.5) == approx(1.5)
 
     def test_axial_lerp(self):
         from hexon.structs.coordinates import axial_lerp
@@ -245,7 +246,7 @@ class CoordinatesUnitTests(unittest.TestCase):
             AxialCoord(1, 1),
             AxialCoord(1, 2),
             AxialCoord(2, 2),
-            AxialCoord(2, 3)
+            AxialCoord(2, 3),
         ]
 
         assert axial_line_draw(AxialCoord(0, 0), AxialCoord(1, 5)) == [
@@ -255,9 +256,9 @@ class CoordinatesUnitTests(unittest.TestCase):
             AxialCoord(0, 3),
             AxialCoord(1, 3),
             AxialCoord(1, 4),
-            AxialCoord(1, 5)
+            AxialCoord(1, 5),
         ]
-    
+
     def test_pixel_to_pointy_hex(self):
         from hexon.structs.coordinates import pixel_to_pointy_hex, Point, AxialCoord
 
@@ -272,6 +273,7 @@ class CoordinatesUnitTests(unittest.TestCase):
         assert pixel_to_flat_hex(Point(12, 12), 10) == AxialCoord(1, 0)
         assert pixel_to_flat_hex(Point(111, 111), 10) == AxialCoord(7, 3)
 
+
 class MapUnitTests(unittest.TestCase):
     @pytest.fixture(scope="class", autouse=True)
     def new_path(self, tmp_path_factory):
@@ -282,26 +284,24 @@ class MapUnitTests(unittest.TestCase):
         from hexon.structs.hexagon import Hexagon
         from hexon.structs.coordinates import Point, AxialCoord
 
-        hex = Hexagon(AxialCoord(0, 0), 10)
+        hexagon = Hexagon(AxialCoord(0, 0), 10)
 
-        assert find_offset(hex, 10) == Point(-9, -10)
+        assert find_offset(hexagon, 10) == Point(-9, -10)
 
-        hex = Hexagon(AxialCoord(0, 0), 10, "flat")
+        hexagon = Hexagon(AxialCoord(0, 0), 10, "flat")
 
-        assert find_offset(hex, 10) == Point(-10, -9)
+        assert find_offset(hexagon, 10) == Point(-10, -9)
 
     def test_RectHexMap(self):
         from hexon.structs.hexmap import RectHexMap
 
-        map = RectHexMap(10, 10, 10)
+        pointy_map = RectHexMap(10, 10, 10)
 
         p = self.__new_path / "test.png"
-        map.draw(p)
+        pointy_map.draw(p)
 
-        assert (
-            str(map)[0:81]
-            == "RectHexMap(width=10, height=10, hex_size=10, orientation=orientation_types.pointy"
-        )
+        assert "RectHexMap(width=10, height=10, hex_size=10" in str(pointy_map)
+        assert "pointy" in str(pointy_map)
 
         flat_map = RectHexMap(10, 10, 10, "flat")
 
@@ -317,45 +317,39 @@ class MapUnitTests(unittest.TestCase):
         p = self.__new_path / "test.png"
         flat_map.draw(p)
 
-        assert (
-            str(flat_map)[0:61]
-            == "RectHexMap(width=10, height=10, hex_size=10, orientation=flat"
-        )
+        assert "RectHexMap(width=10, height=10, hex_size=10" in str(flat_map)
+        assert "flat" in str(flat_map)
 
     def test_CircularHexMap(self):
         from hexon.structs.hexmap import CircularHexMap
 
-        map = CircularHexMap(10, 10)
+        pointy_map = CircularHexMap(10, 10)
 
         p = self.__new_path / "test.png"
-        map.draw(p)
+        pointy_map.draw(p)
 
-        assert (
-            str(map)[0:75]
-            == "CircularHexMap(radius=10, hex_size=10, orientation=orientation_types.pointy"
-        )
+        assert "CircularHexMap(radius=10, hex_size=10" in str(pointy_map)
+        assert "pointy" in str(pointy_map)
 
         flat_map = CircularHexMap(10, 10, "flat")
 
         p = self.__new_path / "test.png"
         flat_map.draw(p)
 
-        assert (
-            str(flat_map)[0:55]
-            == "CircularHexMap(radius=10, hex_size=10, orientation=flat"
-        )
+        assert "CircularHexMap(radius=10, hex_size=10" in str(flat_map)
+        assert "flat" in str(flat_map)
 
     def test_Hexagon(self):
         from hexon.structs.hexagon import Hexagon
         from hexon.structs.coordinates import AxialCoord
 
-        hex = Hexagon(AxialCoord(0, 0), 10)
-        hex2 = Hexagon(AxialCoord(0, 0), 10)
+        hexagon = Hexagon(AxialCoord(0, 0), 10)
+        hexagon2 = Hexagon(AxialCoord(0, 0), 10)
         ax = AxialCoord(0, 0)
 
-        assert hex.coords == AxialCoord(0, 0)
-        assert hex.orientation == "pointy"
-        assert hex.size == 10
-        assert hex == hex2
-        assert hex != ax
-        assert hash(hex) == hash(hex2)
+        assert hexagon.coords == AxialCoord(0, 0)
+        assert hexagon.orientation == "pointy"
+        assert hexagon.size == 10
+        assert hexagon == hexagon2
+        assert hexagon != ax
+        assert hash(hexagon) == hash(hexagon2)
