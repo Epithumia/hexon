@@ -110,12 +110,16 @@ class Hexagon:
             fill=fill,
             outline=outline,
         )
+        self.properties["label"] = "test"
         if "label" in self.properties:
             from PIL import ImageFont
+            from importlib import resources
+
+            default_font = resources.files("hexon").joinpath("fonts/roboto.ttf")
 
             font = self.properties.get(
                 "font",
-                ImageFont.truetype("Roboto-Regular.ttf", max(self.size // 2, 12)),
+                ImageFont.truetype(default_font, max(self.size // 2, 12)),
             )
             color = self.properties.get("label_color", (255, 255, 255))
             _, _, w, h = draw_interface.textbbox(

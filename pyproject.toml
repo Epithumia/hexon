@@ -33,3 +33,9 @@ documentation = [
 
 [project.scripts]
 hexon = "hexon.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.ttf"]
